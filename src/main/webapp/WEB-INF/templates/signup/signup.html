@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Signup</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<th:block th:replace="fragments/cssLinks :: cssLinks"></th:block>
+    <link href="../../../resources/css/main.css" rel="stylesheet" media="screen" th:href="@{/resources/css/main.css}" />
+    <script th:src="@{/webjars/jquery/3.1.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+
+
+</head>
+<body>
+<div class="container">
+<form class="form-narrow form-horizontal" method="post" th:action="@{/signup}" th:object="${signupForm}" th:fragment="signupForm">
+    <!--/* Show general error message when form contains errors */-->
+    <th:block th:if="${#fields.hasErrors('${signupForm.*}')}">
+        <div th:replace="fragments/alert :: alert (type='danger', message='Form contains errors. Please try again.')">Alert</div>
+    </th:block>
+    <fieldset>
+        <legend>Please Sign Up</legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+            <label for="email" class="col-lg-2 control-label">Email</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="email" placeholder="Email address" th:field="*{email}" />
+                <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect email</span>
+            </div>
+        </div>
+				<script th:inline="javascript" type="text/javascript">
+					var strongStrengthRegEx = new RegExp(
+							"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+					var mediumSrengthRegEx = new RegExp(
+							"^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+
+					function passwordChanged(value) {
+
+						if (strongStrengthRegEx.test(value)) {
+							$('#lowPasswordHelpBlock').hide();
+							$('#strongPasswordHelpBlock').show();
+							$('#mediumPasswordHelpBlock').hide();
+							$('#submitButton').attr("disabled", false);
+						} else if (mediumSrengthRegEx.test(value)) {
+							$('#lowPasswordHelpBlock').hide();
+							$('#strongPasswordHelpBlock').hide();
+							$('#mediumPasswordHelpBlock').show();
+							$('#submitButton').attr("disabled", false);
+						} else {
+							$('#lowPasswordHelpBlock').show();
+							$('#strongPasswordHelpBlock').hide();
+							$('#mediumPasswordHelpBlock').hide();
+							$('#submitButton').attr("disabled", true);
+						}
+					};
+				</script>
+				<div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
+            <label for="password" class="col-lg-2 control-label">Password</label>
+            <div class="col-lg-10">
+                <input type="password" class="form-control" id="password" placeholder="Password" th:field="*{password}" onkeyup="passwordChanged(value)"/>
+                <small id="strongPasswordHelpBlock" class="form-text bg-success" style="display: none;">
+  				Strong password
+				</small>
+				<small id="mediumPasswordHelpBlock" class="form-text bg-warning" style="display: none;">
+  				Medium strength password
+				</small>
+				<small id="lowPasswordHelpBlock" class="form-text bg-danger" style="display: none;">
+        		Your password must be 8-20 characters long, and has to contain either letters and numbers or lowercase and uppercase characters
+				</small>
+                <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect password</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button id="submitButton" type="submit" class="btn btn-primary" disabled>Sign up</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <p>Already have an account? <a href="signin" th:href="@{/signin}">Sign In</a></p>
+            </div>
+        </div>
+    </fieldset>
+</form>
+</div>
+</body>
+</html>

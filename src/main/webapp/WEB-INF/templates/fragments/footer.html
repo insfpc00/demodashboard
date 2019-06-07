@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+    <!--/*  Multiple fragments may be defined in one file */-->
+    <div th:fragment="footer" th:align="center">
+        <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2019</span>
+        <span>Fernando Porto</span>
+    </div>
+    <div th:fragment="footer-admin" th:align="center">
+        <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2019</span>
+        <span>Fernando Porto</span><span th:text="${@environment.getProperty('app.version')}"></span>
+    </div>
+</body>
+</html>

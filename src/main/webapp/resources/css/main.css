@@ -1,0 +1,27 @@
+
+body {
+/*   background-color: #bcc7db; */
+  margin-bottom: 60px;
+}
+
+.chart{
+  min-height: 300px;
+}
+
+.darkened-form{
+background-color: rgba(0, 0, 0, 0.05);
+border-radius: 15px;}  	
+}
+
+.spacer5 {
+  height: 5px;
+}
+#chartdiv {
+  width: 100%;
+  height: 40vh;
+  overflow:hidden;
+}
+
+.dropdown-toggle::after {
+    display:none;
+}

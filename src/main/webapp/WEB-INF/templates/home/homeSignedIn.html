@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{view.index.title}">Welcome!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+ 	<th:block th:replace="fragments/cssLinks :: cssLinks"></th:block>
+    <link href="../../../resources/css/main.css" rel="stylesheet" media="screen" th:href="@{/resources/css/main.css}" />
+    <script th:src="@{/webjars/jquery/3.1.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+    <link href="../../../resources/css/open-iconic-bootstrap.css" rel="stylesheet" media="screen" th:href="@{/webjars/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css}" />
+    
+</head>
+<body>
+<div th:replace="fragments/header :: header">&nbsp;</div>
+<div class="container mt-4">
+    <th:block th:if="${message != null}">
+        <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+        
+    </th:block>
+    <p>
+        Welcome to the Dashboard demo!
+    </p>
+</div>
+</body>
+</html>

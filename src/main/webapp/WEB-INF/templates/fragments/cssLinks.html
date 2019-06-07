@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head >
+<th:block th:fragment="cssLinks">
+  <th:block th:if="${#authentication}">
+    <th:block th:if="${#authorization.expression('!isAuthenticated()')}">
+  		<link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}" />
+  		<link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap/default.css}" />
+	</th:block>
+	<th:block th:if="${#authorization.expression('isAuthenticated()')}">
+  		<link th:if="${#authentication.principal.theme=='default'}" href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}" />
+  		<link th:if="${#authentication.principal.theme!='default'}" href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap/__${#authentication.principal.theme}__.min.css}" />
+  		<link th:if="${#authentication.principal.theme=='default'}" href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap/default.css}" />
+	</th:block>  	  	
+  </th:block>
+  <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/main.css}" />
+</th:block>
+</head>
+<body>
+</body>
+</html>

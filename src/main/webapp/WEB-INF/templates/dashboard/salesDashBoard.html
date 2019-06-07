@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Sales DashBoard</title>
+
+<script th:src="@{/webjars/jquery/3.1.0/jquery.min.js}"></script>
+<th:block th:replace="fragments/cssLinks :: cssLinks"></th:block>
+<script th:src="@{/resources/js/app.js}"></script>
+<script th:src="@{/resources/js/datatables/datatables.js}"></script>
+<script th:src="@{/webjars/sockjs-client/1.0.2/sockjs.min.js}"></script>
+<script th:src="@{/webjars/stomp-websocket/2.3.3/stomp.min.js}"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script th:src="@{/resources/js/amcharts4/core.js}"></script>
+<script th:src="@{/resources/js/amcharts4/charts.js}"></script>
+<script th:src="@{/resources/js/amcharts4/maps.js}"></script>
+<script th:src="@{/resources/js/amcharts4/geodata/spainHigh.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+<link href="../../../resources/css/datatables/datatables.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/datatables/datatables.min.css}" />
+<link href="../../../resources/css/open-iconic-bootstrap.css" rel="stylesheet" media="screen" th:href="@{/webjars/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css}" />
+
+
+
+<script type="text/javascript" th:inline="javascript">
+
+	google.charts.load('current', {
+		'packages' : [ 'corechart', 'line' ]
+	});
+	google.charts.setOnLoadCallback(drawChart);
+	function drawChart() {
+		salesByProductChart = new google.visualization.ColumnChart(document
+				.getElementById('columnchart_salesbyproduct'));
+		
+		salesByCategoryChart = new google.visualization.PieChart(document
+				.getElementById('columnchart_salesbycategory'));
+		
+// 		salesByProductAndMinuteChart = new google.visualization.LineChart(document
+//  				.getElementById('linechart_salesbyproductandminute'));
+
+		var initalDatatable=[];
+		initalDatatable.push(['Minute']);
+		initalDatatable.push([0]);
+		
+		salesByProductAndMinuteChart = new google.visualization.ChartWrapper({
+		    chartType: 'LineChart',
+		    dataTable: initalDatatable,
+		    options : {backgroundColor: { fill:'#ffffff',fillOpacity:0.1 },
+		               title: 'Sales by product and minute',
+		               animation:{
+		                duration: 1000,
+		                easing: "linear",
+		                startup: true
+      	      }}
+        	  ,containerId: 'linechart_salesbyproductandminute'
+		  });
+		salesByProductAndMinuteChart.getDataTable().removeRow(0);
+
+		salesByCategoryAndMinuteChart = new google.visualization.ChartWrapper({
+		    chartType: 'LineChart',
+		    dataTable: initalDatatable,
+		    options : {backgroundColor: { fill:'#ffffff',fillOpacity:0.1 },
+		               title: 'Sales by category and minute',
+		               animation:{
+		                duration: 1000,
+		                easing: "linear",
+		                startup: true
+      	      }}
+        	  ,containerId: 'linechart_salesbycategoryandminute'
+		  });
+		salesByCategoryAndMinuteChart.getDataTable().removeRow(0); 
+
+		
+		var salesWrapper=/*[[${salesStats}]]*/;
+		refreshCharts(salesWrapper.shift());
+
+			for (sale of salesWrapper){
+				showItem(sale);
+				updateGeoChart(sale);
+			}
+		
+	}
+
+	window.addEventListener('load', connect);
+
+</script>
+
+
+<script th:inline="javascript">
+$(document).ready(function() {
+    salesDataTable=$('#sales').DataTable( {
+    	
+        initComplete:function () {
+            this.api().columns().every( function () {
+                var column = this;
+                var text="Choose "+$(column.header()).text().toLowerCase()+" ...";
+                var select = $('<select><option value="">'+text+'</option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+ 
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+ 
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+        },
+        createdRow:function(row,data){
+        	for (valueIdx in data){
+         		var footer=this.api().columns().column(valueIdx).footer(0);
+         		if ($(footer).find("option[value='"+ data[valueIdx]+"']").length==0){
+         			$(footer).find("select")
+         			.append('<option value="'+data[valueIdx]+'">'+data[valueIdx]+'</option>');
+         		}
+         	}
+        }
+         
+    } );
+    
+    } );
+    
+    
+</script>
+
+
+</head>
+<body>
+	<div th:replace="fragments/header :: header">&nbsp;</div>
+
+	<noscript>
+		<h2 style="color: #ff0000">Seems your browser doesn't support
+			Javascript! Websocket relies on Javascript being enabled. Please
+			enable Javascript and reload this page!</h2>
+	</noscript>
+	<div id="main-content" class="container mt-4">
+
+
+		<div class="row">
+			<div class="col-md-6">
+				<form class="form-inline">
+					<div class="form-group">
+						<button id="onoff" class="btn btn-default btn-sm" type="submit">
+							<span  class="oi oi-power-standby" title="oi-power-standby" aria-hidden="true"></span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="spacer5"></div>
+		<div class="row">
+			<div class="col">
+		
+			<table id="sales" class="table table-striped table-bordered">
+			<caption>Items sold</caption>
+				<thead>
+					<tr>
+						<th>Product</th>
+						<th>Sale date</th>
+						<th>Categories</th>
+						<th>Customer</th>
+					</tr>
+				</thead>
+				<tbody id="items">
+				
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Product</th>
+						<th>Sale date</th>
+						<th>Categories</th>
+						<th>Customer</th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		</div>
+	</div>
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col p-0">
+				<div id="columnchart_salesbyproduct" class="chart"></div>
+			</div>
+			<div class="col p-0">
+				<div id="columnchart_salesbycategory" class="chart"></div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col p-0">
+				<div id="linechart_salesbyproductandminute" class="chart"></div>
+			</div>
+			<div class="col p-0">
+				<div id="linechart_salesbycategoryandminute" class="chart"></div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-12">
+				<div id="chartdiv"></div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+
+		var container = am4core.create("chartdiv", am4core.Container);
+
+		container.width = am4core.percent(100);
+		container.height = am4core.percent(100);
+
+		var mapChart = container.createChild(am4maps.MapChart);
+		mapChart.maxZoomLevel = 1;
+		mapChart.seriesContainer.draggable = false;
+		mapChart.seriesContainer.resizable = false;
+		mapChart.geodata = am4geodata_spainHigh;
+		mapChart.projection = new am4maps.projections.Miller();
+		mapChart.seriesContainer.draggable = false;
+
+		var polygonSeries = mapChart.series
+				.push(new am4maps.MapPolygonSeries());
+		polygonSeries.useGeodata = true;
+		polygonSeries.exclude = [ "ES-CN" ];
+
+		xychart = container.createChild(am4charts.XYChart);
+		xychart.legend=new am4charts.Legend();
+		xychart.paddingRight = 20;
+		let title=xychart.titles.create();
+		title.text="Sales group by customer"
+		title.fontWeight=600;
+		title.align="right";
+		// Add data
+
+		// Create axes
+		var xAxis = xychart.xAxes.push(new am4charts.ValueAxis());
+		xAxis.renderer.minGridDistance = 50;
+		xAxis.renderer.grid.template.location = 0.5;
+		xAxis.startLocation = 0.5;
+		xAxis.endLocation = 0.5;
+		xAxis.title.text="Time";
+		var valueAxis = xychart.yAxes.push(new am4charts.ValueAxis());
+		seriesTags = [];
+
+		imageSeries = mapChart.series.push(new am4maps.MapImageSeries());
+
+		var imageSeriesTemplate = imageSeries.mapImages.template;
+		var circle = imageSeriesTemplate.createChild(am4core.Circle);
+		circle.radius = 4;
+		circle.fill = am4core.color("#B27799");
+		circle.stroke = am4core.color("#FFFFFF");
+		circle.strokeWidth = 2;
+		circle.nonScaling = true;
+		circle.tooltipText = "{title}";
+
+		var circleText = imageSeriesTemplate.createChild(am4core.Label);
+		circleText.text = "{title}";
+		circleText.fillOpacity = 0.8;
+		circleText.fontSize = 10;
+		circleText.verticalCenter = "middle";
+		circleText.horizontalCenter = "right";
+		circleText.paddingRight = 5;
+
+		// 	// Set property fields
+		imageSeriesTemplate.propertyFields.latitude = "latitude";
+		imageSeriesTemplate.propertyFields.longitude = "longitude";
+
+		imageSeries.data = [];
+	</script>
+
+</body>
+</html>

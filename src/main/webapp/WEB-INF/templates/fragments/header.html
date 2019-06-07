@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link href="../../../resources/css/open-iconic-bootstrap.css" rel="stylesheet" media="screen" th:href="@{/webjars/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css}" />
+    <script th:src="@{/webjars/jquery/3.1.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Dashboard Demo</a>
+        </div>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+    
+            <ul class="navbar-nav">
+                <li class="nav-item" th:classappend="${module == 'home' ? 'active' : ''}">
+                    <a class="nav-link" href="#" th:href="@{/}">Home</a>
+                </li>
+                <li class="nav-item" th:classappend="${module == 'catalog' ? 'active' : ''}">
+                    <a class="nav-link" href="#" th:href="@{/catalog}">Catalog</a>
+                </li>
+                <li class="nav-item"  th:classappend="${module == 'dashboard' ? 'active' : ''}">
+                    <a class="nav-link" href="#" th:href="@{/dashboard}">Dashboard</a>
+                </li>
+            </ul>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+				<li class="nav-item dropdown" th:if="${#authorization.expression('isAuthenticated()')}">
+				<a	class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span sec:authentication="name"></span> <span class="oi oi-person"></span></a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" id="selectTheme" href="#">Select theme</a> 
+					</div>
+				</li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}">
+                    <a href="/signin" th:href="@{/signin}">
+                        <span  class="nav-link oi oi-account-login" title="Login" aria-hidden="true">&nbspSign in</span>
+                    </a>
+                </li>
+                <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+<!--                     <a href="/logout" th:href="@{#}" onclick="$('#form').submit();"> -->
+					<a href="/logout">
+                        <span  class="nav-link oi oi-account-logout" title="Logout" aria-hidden="true">&nbspLogout</span>
+                    </a>
+<!--                     <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form> -->
+                </li>
+            </ul>
+        </div>
+
+<script th:inline="javascript" type="text/javascript">
+/* Fill in modal with content loaded with Ajax */
+$(document).ready(function () {
+    $('#selectTheme').on('click', function (e) {
+        $("#selectThemeModal").modal();
+        $("#selectThemeModalBody").text("");
+        $.ajax({
+            url: "theme",
+            cache: false
+        }).done(function (html) {
+            $("#selectThemeModalBody").append(html);
+        });
+    })
+});
+</script>
+<!-- Modal -->
+<div class="modal fade" id="selectThemeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="selectThemeModalLabel">Select theme</h4>
+            </div>
+            <div class="modal-body" id="selectThemeModalBody">Lorem ipsum</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</nav>
+
+</body>
+</html>
