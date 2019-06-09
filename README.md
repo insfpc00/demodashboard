@@ -35,7 +35,17 @@ Build and run:
 $ mvn clean package
 $ java -jar target\demo-0.0.1-SNAPSHOT.war initDb
 ```
-
+### Send data to the server
+To simulate the sales that will be monitored on the dashboard you should make an HTTP POST request to https://fportodemodashboard.herokuapp.com/sales with data similar to this sample:
+```sh
+{
+  "customerCIF": "V7792132H",
+  "items":[{"productName": "Pendrive",
+  "quantity": 2},{"productName": "Keyboard",
+  "quantity": 2}]
+  
+}
+```
 
 ### Automated tests
 Simply run:
