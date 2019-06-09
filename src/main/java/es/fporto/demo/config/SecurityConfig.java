@@ -30,9 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
         .authorizeRequests()
         	.antMatchers(HttpMethod.POST,"/sales/**").permitAll()
-            .antMatchers("/","/#", "/favicon.ico", "/resources/**", "/signup","/remindPassword","/webjars/**","/changePassword*").permitAll()
-            .antMatchers("/updatePassword*",
-                    "/savePassword*")
+            .antMatchers("/","/favicon.ico", "/resources/**", "/signup","/remindPassword","/webjars/**","/changePassword*").permitAll()
+            .antMatchers("/updatePassword*","/savePassword*")
             //.permitAll()
             .hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
             .anyRequest().authenticated()
