@@ -149,7 +149,7 @@ $(document).ready(function() {
 					</table>
 				</div>
 			</div>
-			<div class="col-lg-6 darkened-form">
+			<div class="col-6 darkened-form">
 				<form class="form-narrow form-horizontal pb-2 " method="post"
 					th:action="@{/updateProduct}" th:object="${productWrapper.product}"
 					th:fragment="updateProduct">
@@ -162,8 +162,8 @@ $(document).ready(function() {
 						<legend>Product</legend>
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('name')}? 'has-error'">
-							<label for="name" class="col-lg-2 control-label">Name</label>
-							<div class="col-lg-10">
+							<label for="name" class="col-2 control-label">Name</label>
+							<div class="">
 								<input type="text" class="form-control" id="name"
 									placeholder="Name" th:field="*{name}" /> <span
 									class="help-block text-danger" th:if="${#fields.hasErrors('name')}"
@@ -172,9 +172,9 @@ $(document).ready(function() {
 						</div>
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('sizeInCm')}? 'has-error'">
-							<label for="size" class="col-lg-6 control-label">Size (in
+							<label for="size" class="col-6 control-label">Size (in
 								cm)</label>
-							<div class="col-lg-10">
+							<div>
 								<input type="text" class="form-control" id="size"
 									placeholder="Size" th:field="*{sizeInCm}" /> <span
 									class="help-block text-danger" th:if="${#fields.hasErrors('sizeInCm')}"
@@ -183,9 +183,9 @@ $(document).ready(function() {
 						</div>
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('weightInGrams')}? 'has-error'">
-							<label for="size" class="col-lg-6 control-label">Weight
+							<label for="size" class="col-6 control-label">Weight
 								(in grams)</label>
-							<div class="col-lg-10">
+							<div>
 								<input type="text" class="form-control" id="weight"
 									placeholder="Size" th:field="*{weightInGrams}" /> <span
 									class="help-block text-danger"
@@ -195,8 +195,8 @@ $(document).ready(function() {
 						</div>
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('quantity')}? 'has-error'">
-							<label for="quantity" class="col-lg-2 control-label">Quantity</label>
-							<div class="col-lg-10">
+							<label for="quantity" class="col-2 control-label">Quantity</label>
+							<div>
 								<input type="text" class="form-control" id="quantity"
 									placeholder="Size" th:field="*{quantity}" /> <span
 									class="help-block text-danger" th:if="${#fields.hasErrors('quantity')}"
@@ -206,7 +206,7 @@ $(document).ready(function() {
 
 						<div class="form-group" >
 							<label for="categories" class="col-lg-2 control-label">Categories</label>
-							<div class="col-lg-10">
+							<div>
 								<ul>
 									<li th:each="category : ${categoriesWrapper.categories}" >
 										<input th:id="|product_cat_${category.name}|" type="checkbox"
@@ -217,8 +217,8 @@ $(document).ready(function() {
 						</div>
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('${productWrapper.price}')}? 'has-error'">
-							<label for="price" class="col-lg-2 control-label">Price</label>
-							<div class="col-lg-10">
+							<label for="price" class="col-2 control-label">Price</label>
+							<div>
 								<input type="number" step="0.01" class="form-control" id="price"
 									placeholder="Price" th:field="${productWrapper.price}" /> <span
 									class="help-block" th:if="${#fields.hasErrors('${productWrapper.price}')}"
@@ -267,10 +267,10 @@ $(document).ready(function() {
 							<tbody>
 								<tr th:id="|cat_${itemStat.index}|" th:each="category, itemStat : *{categories}" th:classappend="${#fields.hasErrors('categories[__${itemStat.index}__].name')}?'bg-danger':''">
 									<td>
-										<input th:name="|categories[${itemStat.index}].name|" th:value="${category.getName()}" th:field="*{categories[__${itemStat.index}__].name}" disabled/>
+										<input class="form-control" th:name="|categories[${itemStat.index}].name|" th:value="${category.getName()}" th:field="*{categories[__${itemStat.index}__].name}" disabled/>
 									</td>
 									<td>
-										<input th:name="|categories[${itemStat.index}].description|" th:value="${category.getDescription()}" /></td>
+										<input class="form-control" th:name="|categories[${itemStat.index}].description|" th:value="${category.getDescription()}" /></td>
 									<td>
 										<span  class="oi oi-x" title="oi-x" aria-hidden="true" th:data-category="${itemStat.index}" th:onclick="removeCategory(this.getAttribute('data-category'));"></span>
 									</td>
@@ -346,8 +346,8 @@ $(document).ready(function() {
 					</table>
 				</div>
 			</div>
-			<div class="col-lg-6">
-				<form class="form-narrow form-horizontal p-2 darkened-form" method="post"
+			<div class="col-6">
+				<form class="form-narrow form-horizontal p-3 darkened-form" method="post"
 					th:action="@{/updateCustomer}"
 					th:object="${customer}"
 					th:fragment="updateCustomer">
@@ -361,7 +361,7 @@ $(document).ready(function() {
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('CIF')}? 'has-error'">
 							<label for="CIF" class="col-lg-2 control-label">CIF</label>
-							<div class="col-lg-10">
+							<div>
 								<input type="text" class="form-control" id="cust_CIF"
 									placeholder="CIF" th:field="*{CIF}" /> <span
 									class="help-block" th:if="${#fields.hasErrors('CIF')}"
@@ -371,7 +371,7 @@ $(document).ready(function() {
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('name')}? 'has-error'">
 							<label for="size" class="col-lg-2 control-label">Name</label>
-							<div class="col-lg-10">
+							<div>
 								<input type="text" class="form-control" id="cust_name"
 									placeholder="Name" th:field="*{name}" /> <span
 									class="help-block" th:if="${#fields.hasErrors('name')}"
@@ -381,7 +381,7 @@ $(document).ready(function() {
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('description')}? 'has-error'">
 							<label for="description" class="col-lg-2 control-label">Description</label>
-							<div class="col-lg-10">
+							<div>
 								<input type="text" class="form-control" id="cust_description"
 									placeholder="Size" th:field="*{description}" /> <span
 									class="help-block" th:if="${#fields.hasErrors('description')}"
@@ -394,7 +394,7 @@ $(document).ready(function() {
 						<div th:object="${customer.address}">
 							<div class="form-group"	th:classappend="${#fields.hasErrors('latitude')}? 'has-error'">
 							<label for="latitude" class="col-lg-2 control-label">Latitude</label>
-							<div class="col-lg-10">
+							<div>
 								<input type="text" class="form-control" id="cust_latitude"
 									placeholder="latitude" th:field="*{latitude}" /> <span
 									class="help-block" th:if="${#fields.hasErrors('latitude')}"
@@ -404,7 +404,7 @@ $(document).ready(function() {
 							<div class="form-group"
 							th:classappend="${#fields.hasErrors('longitude')}? 'has-error'">
 							<label for="longitude" class="col-lg-2 control-label">Longitude</label>
-							<div class="col-lg-10">
+							<div>
 								<input type="text" class="form-control" id="cust_longitude"
 									placeholder="longitude" th:field="*{longitude}" /> <span
 									class="help-block" th:if="${#fields.hasErrors('longitude')}"

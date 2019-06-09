@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
         .authorizeRequests()
         	.antMatchers(HttpMethod.POST,"/sales/**").permitAll()
-            .antMatchers("/", "/favicon.ico", "/resources/**", "/signup","/remindPassword","/webjars/**","/changePassword*").permitAll()
+            .antMatchers("/","/#", "/favicon.ico", "/resources/**", "/signup","/remindPassword","/webjars/**","/changePassword*").permitAll()
             .antMatchers("/updatePassword*",
                     "/savePassword*")
             //.permitAll()
@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .logout()
             .logoutUrl("/logout")
             .permitAll()
-            .logoutSuccessUrl("/signin?logout")
+            .logoutSuccessUrl("/")
             .and()
         .rememberMe()
             .rememberMeServices(rememberMeServices())
