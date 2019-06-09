@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Signup</title>
+<title>Catalog</title>
+<link rel="icon" type="image/png" th:href="@{/webjars//open-iconic/1.1.1/png/dashboard-4x.png}">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <th:block th:replace="fragments/cssLinks :: cssLinks"></th:block>
 <script th:src="@{/webjars/jquery/3.1.0/jquery.min.js}"></script>
 <script th:src="@{/resources/js/datatables/datatables.js}"></script>
-<script th:src="@{/webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script> 
+<script th:src="@{/webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
 
-<link href="../../../resources/css/open-iconic-bootstrap.css" rel="stylesheet" media="screen" th:href="@{/webjars/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css}" />
-<link href="../../../resources/css/datatables/datatables.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/datatables/datatables.min.css}" />
+<link rel="icon" type="image/png" th:href="@{/webjars//open-iconic/1.1.1/png/dashboard-4x.png}">
+<link href="../../../resources/css/datatables/datatables.min.css"
+	rel="stylesheet" media="screen"
+	th:href="@{/resources/css/datatables/datatables.min.css}" />
 
 <script th:inline="javascript">
 	customersList=/*[[${customers}]]*/;
@@ -111,8 +114,13 @@ $(document).ready(function() {
 </script>
 
 </head>
+<style>
+.selectable{
+	cursor: pointer;
+}
+</style>
 <body>
-        
+
 	<div th:replace="~{fragments/header :: header}">Header</div>
 	<div class="container mt-4">
 		<div class="row">
@@ -137,7 +145,7 @@ $(document).ready(function() {
 
 							<tr th:data-product="${iterstat.index}"
 								th:each="prod,iterstat : ${products}"
-								th:onclick="productRowClicked(this.getAttribute('data-product'));">
+								th:onclick="productRowClicked(this.getAttribute('data-product'));" class="selectable">
 
 								<td><span th:text="${prod.name}">Name</span></td>
 								<td><span th:text="${prod.sizeInCm}">Size</span></td>
@@ -166,8 +174,9 @@ $(document).ready(function() {
 							<div class="">
 								<input type="text" class="form-control" id="name"
 									placeholder="Name" th:field="*{name}" /> <span
-									class="help-block text-danger" th:if="${#fields.hasErrors('name')}"
-									th:errors="*{name}">Incorrect name</span>
+									class="help-block text-danger"
+									th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect
+									name</span>
 							</div>
 						</div>
 						<div class="form-group"
@@ -177,14 +186,15 @@ $(document).ready(function() {
 							<div>
 								<input type="text" class="form-control" id="size"
 									placeholder="Size" th:field="*{sizeInCm}" /> <span
-									class="help-block text-danger" th:if="${#fields.hasErrors('sizeInCm')}"
+									class="help-block text-danger"
+									th:if="${#fields.hasErrors('sizeInCm')}"
 									th:errors="*{sizeInCm}">Incorrect size</span>
 							</div>
 						</div>
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('weightInGrams')}? 'has-error'">
-							<label for="size" class="col-6 control-label">Weight
-								(in grams)</label>
+							<label for="size" class="col-6 control-label">Weight (in
+								grams)</label>
 							<div>
 								<input type="text" class="form-control" id="weight"
 									placeholder="Size" th:field="*{weightInGrams}" /> <span
@@ -199,18 +209,20 @@ $(document).ready(function() {
 							<div>
 								<input type="text" class="form-control" id="quantity"
 									placeholder="Size" th:field="*{quantity}" /> <span
-									class="help-block text-danger" th:if="${#fields.hasErrors('quantity')}"
+									class="help-block text-danger"
+									th:if="${#fields.hasErrors('quantity')}"
 									th:errors="*{quantity}">Incorrect quantity</span>
 							</div>
 						</div>
 
-						<div class="form-group" >
+						<div class="form-group">
 							<label for="categories" class="col-lg-2 control-label">Categories</label>
 							<div>
 								<ul>
-									<li th:each="category : ${categoriesWrapper.categories}" >
+									<li th:each="category : ${categoriesWrapper.categories}">
 										<input th:id="|product_cat_${category.name}|" type="checkbox"
-										th:field="${productWrapper.categories}" th:value="${category.name}" /> <label
+										th:field="${productWrapper.categories}"
+										th:value="${category.name}" /> <label
 										th:text="${category.name}"></label>
 								</ul>
 							</div>
@@ -221,39 +233,41 @@ $(document).ready(function() {
 							<div>
 								<input type="number" step="0.01" class="form-control" id="price"
 									placeholder="Price" th:field="${productWrapper.price}" /> <span
-									class="help-block" th:if="${#fields.hasErrors('${productWrapper.price}')}"
+									class="help-block"
+									th:if="${#fields.hasErrors('${productWrapper.price}')}"
 									th:errors="${productWrapper.price}">Incorrect price</span>
 							</div>
 						</div>
 						<div class="form-row col-lg-offset-2">
-								<div class="col-auto">
-									<button type="reset" class="btn btn-secondary">Reset</button>
-								</div>
-								<div class="col-auto">
-									<button type="submit" class="btn btn-primary">Save</button>
-								</div>
-							
+							<div class="col-auto">
+								<button type="reset" class="btn btn-secondary">Reset</button>
+							</div>
+							<div class="col-auto">
+								<button type="submit" class="btn btn-primary">Save</button>
+							</div>
+
 						</div>
 					</fieldset>
-				<ul>
-<!--     <li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr"> -->
-<!--         <span th:text="${e.global}? '*' : ${e.fieldName}">The field name</span> | -->
-<!--         <span th:text="${e.message}">The error message</span> -->
-<!--     </li> -->
-</ul>
+					<ul>
+						<!--     <li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr"> -->
+						<!--         <span th:text="${e.global}? '*' : ${e.fieldName}">The field name</span> | -->
+						<!--         <span th:text="${e.message}">The error message</span> -->
+						<!--     </li> -->
+					</ul>
 				</form>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-lg-6">
-				<form id="categoriesForm" class="form-narrow form-horizontal" method="post"
-					th:action="@{/saveCategories}" th:object="${categoriesWrapper}"
-					th:fragment="categoriesForm">
+				<form id="categoriesForm" class="form-narrow form-horizontal"
+					method="post" th:action="@{/saveCategories}"
+					th:object="${categoriesWrapper}" th:fragment="categoriesForm">
 					<th:block th:if="${#fields.hasErrors('*')}">
-        				<div th:replace="fragments/alert :: alert (type='danger', message='Form contains errors. Please try again.')">Alert</div>
-    				</th:block>
-					
-					
+						<div
+							th:replace="fragments/alert :: alert (type='danger', message='Form contains errors. Please try again.')">Alert</div>
+					</th:block>
+
+
 					<fieldset>
 						<legend>Categories</legend>
 						<table id="categoriesTable"
@@ -265,23 +279,29 @@ $(document).ready(function() {
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:id="|cat_${itemStat.index}|" th:each="category, itemStat : *{categories}" th:classappend="${#fields.hasErrors('categories[__${itemStat.index}__].name')}?'bg-danger':''">
-									<td>
-										<input class="form-control" th:name="|categories[${itemStat.index}].name|" th:value="${category.getName()}" th:field="*{categories[__${itemStat.index}__].name}" disabled/>
+								<tr th:id="|cat_${itemStat.index}|"
+									th:each="category, itemStat : *{categories}" class="selectable"
+									th:classappend="${#fields.hasErrors('categories[__${itemStat.index}__].name')}?'bg-danger':''">
+									<td><input class="form-control"
+										th:name="|categories[${itemStat.index}].name|"
+										th:value="${category.getName()}"
+										th:field="*{categories[__${itemStat.index}__].name}" disabled />
 									</td>
-									<td>
-										<input class="form-control" th:name="|categories[${itemStat.index}].description|" th:value="${category.getDescription()}" /></td>
-									<td>
-										<span  class="oi oi-x" title="oi-x" aria-hidden="true" th:data-category="${itemStat.index}" th:onclick="removeCategory(this.getAttribute('data-category'));"></span>
+									<td><input class="form-control"
+										th:name="|categories[${itemStat.index}].description|"
+										th:value="${category.getDescription()}" /></td>
+									<td><span class="oi oi-x" title="oi-x" aria-hidden="true"
+										th:data-category="${itemStat.index}"
+										th:onclick="removeCategory(this.getAttribute('data-category'));"></span>
 									</td>
-									
+
 								</tr>
 							</tbody>
 
 						</table>
-						
-					    <div th:each="e : ${#fields.detailedErrors()}">
-					    	<script th:inline="javascript">
+
+						<div th:each="e : ${#fields.detailedErrors()}">
+							<script th:inline="javascript">
 					    	var field=[[${e.fieldName}]];
 					    	
 					    	if ([[${e.code}]]=='notBlank.message'){
@@ -293,24 +313,27 @@ $(document).ready(function() {
 					    	categoryNotBlankError=([[${e.code}]]=='notBlank.message')||categoryNotBlankError;
 					    
 					    	</script>
-					    </div>	
-					    	<ul th:if="${#fields.hasErrors('*')}">
-								<li id="categoryBeingUsedErrorTag" th:text="#{categoryBeingUsed.message}" class="text-danger"></li>
-								<li id="categoryNotBlankErrorTag" th:text="#{notBlank.message}" class="text-warning"></li>
-							</ul>
-    
-					        
-    
+						</div>
+						<ul th:if="${#fields.hasErrors('*')}">
+							<li id="categoryBeingUsedErrorTag"
+								th:text="#{categoryBeingUsed.message}" class="text-danger"></li>
+							<li id="categoryNotBlankErrorTag" th:text="#{notBlank.message}"
+								class="text-warning"></li>
+						</ul>
+
+
+
 						<div class="form-row">
 							<div class="col-auto">
-								<button class="btn btn-success" type="button" th:onclick="addCategory();">Add</button>
+								<button class="btn btn-success" type="button"
+									th:onclick="addCategory();">Add</button>
 							</div>
 							<div class="col-auto">
-							<button type="submit" class="btn btn-primary">Save</button>
+								<button type="submit" class="btn btn-primary">Save</button>
 							</div>
 						</div>
-											
-						
+
+
 					</fieldset>
 				</form>
 			</div>
@@ -319,7 +342,7 @@ $(document).ready(function() {
 			<div class="col-lg-6">
 
 				<div id="customer-list">
-					<table id="customerListTable"
+					<table id="customerListTable" 
 						class="table table-striped table-bordered">
 						<caption>Customers</caption>
 						<thead>
@@ -334,7 +357,7 @@ $(document).ready(function() {
 								<td colspan="4">No customers</td>
 							</tr>
 
-							<tr th:data-customer="${iterstat.index}"
+							<tr th:data-customer="${iterstat.index}" class="selectable"
 								th:each="customer,iterstat : ${customers}"
 								th:onclick="customerRowClicked(this.getAttribute('data-customer'));">
 
@@ -347,10 +370,9 @@ $(document).ready(function() {
 				</div>
 			</div>
 			<div class="col-6">
-				<form class="form-narrow form-horizontal p-3 darkened-form" method="post"
-					th:action="@{/updateCustomer}"
-					th:object="${customer}"
-					th:fragment="updateCustomer">
+				<form class="form-narrow form-horizontal p-3 darkened-form"
+					method="post" th:action="@{/updateCustomer}"
+					th:object="${customer}" th:fragment="updateCustomer">
 					<!--/* Show general error message when form contains errors */-->
 					<th:block th:if="${#fields.hasErrors('${customer.*}')}">
 						<div
@@ -388,30 +410,31 @@ $(document).ready(function() {
 									th:errors="*{description}">Incorrect description</span>
 							</div>
 						</div>
-						</fieldset>
-						<fieldset>
+					</fieldset>
+					<fieldset>
 						<legend>Address</legend>
 						<div th:object="${customer.address}">
-							<div class="form-group"	th:classappend="${#fields.hasErrors('latitude')}? 'has-error'">
-							<label for="latitude" class="col-lg-2 control-label">Latitude</label>
-							<div>
-								<input type="text" class="form-control" id="cust_latitude"
-									placeholder="latitude" th:field="*{latitude}" /> <span
-									class="help-block" th:if="${#fields.hasErrors('latitude')}"
-									th:errors="*{latitude}">Incorrect latitude</span>
-							</div>
+							<div class="form-group"
+								th:classappend="${#fields.hasErrors('latitude')}? 'has-error'">
+								<label for="latitude" class="col-lg-2 control-label">Latitude</label>
+								<div>
+									<input type="text" class="form-control" id="cust_latitude"
+										placeholder="latitude" th:field="*{latitude}" /> <span
+										class="help-block" th:if="${#fields.hasErrors('latitude')}"
+										th:errors="*{latitude}">Incorrect latitude</span>
+								</div>
 							</div>
 							<div class="form-group"
-							th:classappend="${#fields.hasErrors('longitude')}? 'has-error'">
-							<label for="longitude" class="col-lg-2 control-label">Longitude</label>
-							<div>
-								<input type="text" class="form-control" id="cust_longitude"
-									placeholder="longitude" th:field="*{longitude}" /> <span
-									class="help-block" th:if="${#fields.hasErrors('longitude')}"
-									th:errors="*{longitude}">Incorrect longitude</span>
+								th:classappend="${#fields.hasErrors('longitude')}? 'has-error'">
+								<label for="longitude" class="col-lg-2 control-label">Longitude</label>
+								<div>
+									<input type="text" class="form-control" id="cust_longitude"
+										placeholder="longitude" th:field="*{longitude}" /> <span
+										class="help-block" th:if="${#fields.hasErrors('longitude')}"
+										th:errors="*{longitude}">Incorrect longitude</span>
+								</div>
 							</div>
-							</div>
-						<div class="form-row col-lg-offset-2">
+							<div class="form-row col-lg-offset-2">
 								<div class="col-auto">
 									<button type="reset" class="btn btn-secondary">Reset</button>
 								</div>
